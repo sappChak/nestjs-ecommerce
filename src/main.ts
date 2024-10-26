@@ -11,6 +11,7 @@ async function bootstrap() {
   });
 
   app.set('trust proxy', 'loopback');
+
   setupMiddlewares(app);
 
   await app.listen(process.env.PORT);

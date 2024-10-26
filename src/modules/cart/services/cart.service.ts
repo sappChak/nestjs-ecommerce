@@ -18,10 +18,12 @@ export class CartService {
   public async getCartById(id: string): Promise<Cart> {
     this.logger.log(`Fetching cart with ID: ${id}`);
     const cart = await this.cartModel.findById(id);
+
     if (!cart) {
       this.logger.warn(`Cart with ID ${id} not found`);
       throw new NotFoundException(`Cart with ID ${id} not found`);
     }
+
     this.logger.log(`Fetched cart with ID: ${id}`);
     return cart;
   }
@@ -29,23 +31,28 @@ export class CartService {
   public async getCartWithItemsById(id: string): Promise<Cart> {
     this.logger.log(`Fetching cart with items for ID: ${id}`);
     const cart = await this.cartModel.findById(id).populate('items.id');
+
     if (!cart) {
       this.logger.warn(`Cart with ID ${id} not found`);
       throw new NotFoundException(`Cart with ID ${id} not found`);
     }
+
     this.logger.log(`Fetched cart with items for ID: ${id}`);
     return cart;
   }
 
   public async getWithItemsByUserId(userId: string): Promise<Cart> {
     this.logger.log(`Fetching cart for user with ID: ${userId}`);
+
     const cart = await this.cartModel
       .findOne({ customer: userId })
       .populate('items.id');
+
     if (!cart) {
       this.logger.warn(`No carts found for user with ID ${userId}`);
       throw new NotFoundException(`No carts found for user with ID ${userId}`);
     }
+
     this.logger.log(`Fetched cart for user with ID: ${userId}`);
     return cart;
   }
@@ -56,11 +63,13 @@ export class CartService {
   ): Promise<Cart> {
     this.logger.log(`Adding item ${newItem.id} to cart for user ${userId}`);
     const existingCart = await this.cartModel.findOne({ customer: userId });
+
     if (!existingCart) {
       this.logger.log(`Creating new cart for user ${userId}`);
       return this.createCartWithItem(userId, newItem);
     } else {
       this.logger.log(`Adding item to existing cart for user ${userId}`);
+
       return this.addItemToExistingCart(existingCart, newItem);
     }
   }
@@ -91,13 +100,16 @@ export class CartService {
   public async removeItemFromCart(id: string, itemId: string): Promise<Cart> {
     this.logger.log(`Removing item ${itemId} from cart ${id}`);
     const existingCart = await this.getCartByIdOrThrow(id);
+
     const itemIndex = existingCart.items.findIndex(
       (item) => item.id.toString() === itemId,
     );
+
     if (itemIndex === -1) {
       this.logger.warn(`Item with ID ${itemId} not found in cart ${id}`);
       throw new NotFoundException(`Item with ID ${itemId} not found in cart`);
     }
+
     existingCart.items.splice(itemIndex, 1);
     this.logger.log(`Removed item ${itemId} from cart ${id}`);
     return existingCart.save();

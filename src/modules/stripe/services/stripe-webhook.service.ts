@@ -79,6 +79,7 @@ export class StripeWebhookService {
     this.logger.log(
       `Processing order ID: ${orderId} with status: ${OrderStatus.PAID}`,
     );
+
     try {
       await this.orderService.processOrder(orderId, OrderStatus.PAID);
       this.logger.log(
