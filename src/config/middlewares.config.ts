@@ -31,7 +31,7 @@ function setupGlobalGuards(app: INestApplication) {
   app.useGlobalGuards(new RolesGuard(app.get(Reflector)));
 }
 
-function setupMiddleware(app: INestApplication) {
+function setupMiddlewares(app: INestApplication) {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
 }
@@ -48,11 +48,11 @@ function setupSwagger(app: INestApplication) {
   SwaggerModule.setup('api/docs', app, document);
 }
 
-export function setupMiddlewares(app: INestApplication) {
+export function configureApp(app: INestApplication) {
   setupGlobalPrefix(app);
   enableCors(app);
   setupGlobalPipes(app);
   setupGlobalGuards(app);
-  setupMiddleware(app);
+  setupMiddlewares(app);
   setupSwagger(app);
 }

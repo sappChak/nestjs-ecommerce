@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { loggerOptions } from '@config/logger.config';
-import { setupMiddlewares } from '@config/middlewares.config';
+import { configureApp } from '@config/middlewares.config';
 import { MainModule } from './main.module';
 
 async function bootstrap() {
@@ -12,7 +12,7 @@ async function bootstrap() {
 
   app.set('trust proxy', 'loopback');
 
-  setupMiddlewares(app);
+  configureApp(app);
 
   await app.listen(process.env.PORT);
 }
